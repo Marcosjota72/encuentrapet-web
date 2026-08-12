@@ -2,515 +2,265 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color"
-          content="#159447">
-
-    <title>Copito | EncuentraPet</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#159447">
+    <title>Mascota | EncuentraPet</title>
     <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
             background: #f3f7f5;
             color: #263238;
         }
-
-        /* HEADER */
-
         .header {
-            background: linear-gradient(
-                135deg,
-                #159447,
-                #20a957
-            );
-
+            background: linear-gradient(135deg, #159447, #20a957);
             color: white;
             text-align: center;
             padding: 24px 20px 26px;
-
             border-radius: 0 0 28px 28px;
         }
-
-        .brand {
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-icon {
-            margin-right: 6px;
-        }
-
-        .tagline {
-            margin-top: 7px;
-            font-size: 15px;
-            opacity: 0.95;
-        }
-
-        /* CONTENEDOR */
-
+        .brand { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+        .tagline { margin-top: 7px; font-size: 15px; opacity: 0.95; }
         .container {
             width: 100%;
             max-width: 520px;
             margin: 0 auto;
             padding: 20px 16px 30px;
         }
-
-        /* TARJETA PRINCIPAL */
-
         .pet-card {
             background: white;
-
             border-radius: 24px;
-
             padding: 22px 20px 24px;
-
-            box-shadow:
-                0 8px 30px rgba(0, 0, 0, 0.09);
-
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
             text-align: center;
         }
-
-        /* FOTO */
-
-        .photo-container {
-            margin-top: 2px;
-            margin-bottom: 15px;
-        }
-
+        .photo-container { margin-top: 2px; margin-bottom: 15px; }
         .pet-photo {
             width: 190px;
             height: 190px;
-
             object-fit: cover;
-
             border-radius: 50%;
-
             border: 6px solid #159447;
-
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
         }
-
-        /* NOMBRE */
-
         .pet-name {
             font-size: 34px;
             font-weight: 800;
-
             margin-top: 8px;
             margin-bottom: 10px;
-
             color: #202b33;
         }
-
-        /* ESTADO */
-
         .status {
             display: inline-flex;
-
             align-items: center;
             gap: 8px;
-
             background: #e6f7ec;
-
             color: #10833e;
-
             padding: 9px 17px;
-
             border-radius: 30px;
-
             font-size: 16px;
-
             font-weight: 700;
-
             margin-bottom: 22px;
         }
-
         .status-dot {
             width: 11px;
             height: 11px;
-
             background: #21c86b;
-
             border-radius: 50%;
         }
-
-        /* INFORMACIÓN */
-
         .info-box {
             background: #f7faf8;
-
             border-radius: 17px;
-
             padding: 15px 16px;
-
             text-align: left;
-
             margin-top: 5px;
         }
-
         .info-row {
             display: flex;
-
             align-items: center;
-
             gap: 11px;
-
             padding: 10px 2px;
-
             font-size: 16px;
-
             border-bottom: 1px solid #e5ebe7;
         }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-icon {
-            width: 28px;
-
-            text-align: center;
-
-            font-size: 20px;
-        }
-
-        .info-label {
-            font-weight: 700;
-
-            margin-right: 4px;
-        }
-
-        /* MENSAJE */
-
+        .info-row:last-child { border-bottom: none; }
+        .info-icon { width: 28px; text-align: center; font-size: 20px; }
+        .info-label { font-weight: 700; margin-right: 4px; }
         .message {
             margin-top: 22px;
-
             padding: 17px;
-
             background: #eef8ff;
-
             border-radius: 16px;
-
             color: #31586f;
-
             font-size: 15px;
-
             line-height: 1.45;
         }
-
         .message-title {
             font-weight: 800;
-
             color: #23749c;
-
             font-size: 17px;
-
             margin-bottom: 5px;
         }
-
-        /* BOTÓN */
-
         .contact-button {
             display: block;
-
             width: 100%;
-
             margin-top: 20px;
-
             padding: 17px 15px;
-
             background: #159447;
-
             color: white;
-
             text-decoration: none;
-
             border-radius: 14px;
-
             font-size: 18px;
-
             font-weight: 800;
-
-            box-shadow:
-                0 5px 12px rgba(21, 148, 71, 0.25);
-
+            box-shadow: 0 5px 12px rgba(21, 148, 71, 0.25);
             transition: transform 0.15s;
         }
-
-        .contact-button:active {
-            transform: scale(0.98);
-        }
-
-        /* ID */
-
-        .pet-id {
-            margin-top: 20px;
-
-            color: #7a858a;
-
-            font-size: 13px;
-        }
-
-        .pet-id strong {
-            color: #4e5b61;
-        }
-
-        /* FOOTER */
-
+        .contact-button:active { transform: scale(0.98); }
+        .pet-id { margin-top: 20px; color: #7a858a; font-size: 13px; }
+        .pet-id strong { color: #4e5b61; }
         .footer {
             text-align: center;
-
             padding: 5px 10px 25px;
-
             color: #7a858a;
-
             font-size: 13px;
-
             line-height: 1.5;
         }
-
-        .footer-brand {
-            color: #159447;
-
-            font-weight: 800;
-        }
-
-        /* CELULARES PEQUEÑOS */
-
+        .footer-brand { color: #159447; font-weight: 800; }
         @media (max-width: 380px) {
-
-            .brand {
-                font-size: 26px;
-            }
-
-            .pet-photo {
-                width: 165px;
-                height: 165px;
-            }
-
-            .pet-name {
-                font-size: 30px;
-            }
-
-            .pet-card {
-                padding: 18px 15px 22px;
-            }
-
+            .brand { font-size: 26px; }
+            .pet-photo { width: 165px; height: 165px; }
+            .pet-name { font-size: 30px; }
+            .pet-card { padding: 18px 15px 22px; }
         }
-
     </style>
-
 </head>
 
-
 <body>
-
-
-    <!-- ENCABEZADO -->
-
     <header class="header">
-
-        <div class="brand">
-            🐾 EncuentraPet
-        </div>
-
-        <div class="tagline">
-            Scanea · Protege · Reencuentra
-        </div>
-
+        <div class="brand">🐾 EncuentraPet</div>
+        <div class="tagline">Escanea · Protege · Reencuentra</div>
     </header>
 
-
-    <!-- CONTENIDO -->
-
     <main class="container">
-
         <section class="pet-card">
-
-
-            <!-- FOTO DE COPITO -->
-
             <div class="photo-container">
-
                 <img
+                    id="pet-photo"
                     class="pet-photo"
-                    src="https://placehold.co/500x500?text=Copito"
-                    alt="Fotografía de Copito">
-
+                    src="https://placehold.co/500x500?text=Mascota"
+                    alt="Fotografía de la mascota">
             </div>
 
-
-            <!-- NOMBRE -->
-
-            <div class="pet-name">
-                COPITO
-            </div>
-
-
-            <!-- ESTADO -->
+            <div id="pet-name" class="pet-name">COPITO</div>
 
             <div class="status">
-
                 <span class="status-dot"></span>
-
                 MASCOTA SEGURA
-
             </div>
-
-
-            <!-- INFORMACIÓN -->
 
             <div class="info-box">
-
-
                 <div class="info-row">
-
-                    <div class="info-icon">
-                        🐶
-                    </div>
-
+                    <div class="info-icon">🐶</div>
                     <div>
-                        <span class="info-label">
-                            Especie:
-                        </span>
-
-                        Perro
+                        <span class="info-label">Especie:</span>
+                        <span id="pet-species">Perro</span>
                     </div>
-
                 </div>
-
-
                 <div class="info-row">
-
-                    <div class="info-icon">
-                        📍
-                    </div>
-
+                    <div class="info-icon">📍</div>
                     <div>
-                        <span class="info-label">
-                            Comuna:
-                        </span>
-
-                        Quilicura
+                        <span class="info-label">Comuna:</span>
+                        <span id="pet-comuna">Quilicura</span>
                     </div>
-
                 </div>
-
-
                 <div class="info-row">
-
-                    <div class="info-icon">
-                        ❤️
-                    </div>
-
+                    <div class="info-icon">❤️</div>
                     <div>
-                        <span class="info-label">
-                            Estado:
-                        </span>
-
+                        <span class="info-label">Estado:</span>
                         Registrado en EncuentraPet
                     </div>
-
                 </div>
-
-
                 <div class="info-row">
-
-                    <div class="info-icon">
-                        🆔
-                    </div>
-
+                    <div class="info-icon">🆔</div>
                     <div>
-                        <span class="info-label">
-                            Identificador:
-                        </span>
-
-                        EP-000001
+                        <span class="info-label">Identificador:</span>
+                        <span id="pet-id">EP-000001</span>
                     </div>
-
                 </div>
-
-
             </div>
-
-
-            <!-- MENSAJE -->
 
             <div class="message">
-
-                <div class="message-title">
-                    ¿Encontraste a Copito?
-                </div>
-
+                <div id="message-title" class="message-title">¿Encontraste a Copito?</div>
                 Si esta mascota está perdida o necesita ayuda,
                 puedes contactar directamente a su propietario.
-
             </div>
 
-
-            <!-- CONTACTAR -->
-
-            <a
-                class="contact-button"
-                href="tel:+56900000000">
-
+            <a id="contact-button" class="contact-button" href="tel:+56900000000">
                 📞 Contactar al propietario
-
             </a>
 
-
-            <!-- ID -->
-
             <div class="pet-id">
-
                 Mascota registrada en
-
-                <strong>
-                    EncuentraPet
-                </strong>
-
+                <strong>EncuentraPet</strong>
                 <br>
-
-                ID: <strong>EP-000001</strong>
-
+                ID: <strong id="pet-id-footer">EP-000001</strong>
             </div>
-
-
         </section>
-
     </main>
 
-
-    <!-- PIE -->
-
     <footer class="footer">
-
-        <div class="footer-brand">
-            EncuentraPet
-        </div>
-
+        <div class="footer-brand">EncuentraPet</div>
         Identifica y protege a tu mascota
-
         <br>
-
         © 2026 EncuentraPet
-
     </footer>
 
+    <script>
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+            var id = (params.get("id") || params.get("codigo") || "").trim();
+            var nombre = (params.get("nombre") || params.get("name") || "").trim();
+            var especie = (params.get("especie") || params.get("species") || "").trim();
+            var comuna = (params.get("comuna") || params.get("city") || "").trim();
+            var telefono = (params.get("telefono") || params.get("phone") || "").trim();
 
+            function setText(elementId, value) {
+                if (!value) return;
+                var el = document.getElementById(elementId);
+                if (el) el.textContent = value;
+            }
+
+            if (nombre) {
+                setText("pet-name", nombre.toUpperCase());
+                setText("message-title", "¿Encontraste a " + nombre + "?");
+                document.title = nombre + " | EncuentraPet";
+                var photo = document.getElementById("pet-photo");
+                if (photo) {
+                    photo.alt = "Fotografía de " + nombre;
+                    photo.src = "https://placehold.co/500x500?text=" + encodeURIComponent(nombre);
+                }
+            }
+            setText("pet-species", especie);
+            setText("pet-comuna", comuna);
+            if (id) {
+                setText("pet-id", id);
+                setText("pet-id-footer", id);
+            }
+
+            if (telefono) {
+                var digits = telefono.replace(/[^\d+]/g, "");
+                if (digits.indexOf("+") === -1 && digits.length >= 9) {
+                    digits = "+" + digits;
+                }
+                var btn = document.getElementById("contact-button");
+                if (btn && digits) {
+                    btn.href = "tel:" + digits;
+                }
+            }
+        })();
+    </script>
 </body>
 
 </html>
