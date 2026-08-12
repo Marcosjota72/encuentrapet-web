@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EncuentraPet</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f6;
+            color: #263238;
+        }
+
+        .header {
+            background: #159447;
+            color: white;
+            text-align: center;
+            padding: 22px 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+            text-align: center;
+        }
+
+        .pet-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #159447;
+            margin-bottom: 15px;
+        }
+
+        .pet-name {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .status {
+            display: inline-block;
+            background: #e8f7ed;
+            color: #159447;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0 20px;
+        }
+
+        .info {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .contact-button {
+            display: block;
+            margin-top: 25px;
+            padding: 15px;
+            background: #159447;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="logo">🐾 EncuentraPet</div>
+        <div class="subtitle">
+            Identifica y protege a tu mascota
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <!-- Fotografía temporal -->
+            <img
+                class="pet-photo"
+                src="https://placehold.co/400x400?text=Mascota"
+                alt="Fotografía de la mascota">
+
+            <div class="pet-name">
+                Nombre Mascota
+            </div>
+
+            <div class="status">
+                🟢 Mascota Segura
+            </div>
+
+            <div class="info">
+
+                <p>🐶 <strong>Nombre:</strong> Nombre Mascota</p>
+
+                <p>📍 <strong>Comuna:</strong> Santiago</p>
+
+                <p>❤️ <strong>Estado:</strong> Registrada en EncuentraPet</p>
+
+                <p>🔖 <strong>ID:</strong> EP-000001</p>
+
+            </div>
+
+            <a
+                class="contact-button"
+                href="tel:+56900000000">
+                📞 Contactar al propietario
+            </a>
+
+        </div>
+
+        <div class="footer">
+            EncuentraPet © 2026<br>
+            Scanea · Protege · Reencuentra
+        </div>
+
+    </div>
+
+</body>
+</html>
