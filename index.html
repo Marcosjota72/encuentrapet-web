@@ -1,163 +1,516 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>EncuentraPet</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color"
+          content="#159447">
+
+    <title>Copito | EncuentraPet</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7f6;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f7f5;
             color: #263238;
         }
 
+        /* HEADER */
+
         .header {
-            background: #159447;
+            background: linear-gradient(
+                135deg,
+                #159447,
+                #20a957
+            );
+
             color: white;
             text-align: center;
-            padding: 22px 15px;
+            padding: 24px 20px 26px;
+
+            border-radius: 0 0 28px 28px;
         }
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
+        .brand {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
-        .subtitle {
-            margin-top: 6px;
+        .brand-icon {
+            margin-right: 6px;
+        }
+
+        .tagline {
+            margin-top: 7px;
             font-size: 15px;
+            opacity: 0.95;
         }
+
+        /* CONTENEDOR */
 
         .container {
-            max-width: 480px;
+            width: 100%;
+            max-width: 520px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 20px 16px 30px;
         }
 
-        .card {
+        /* TARJETA PRINCIPAL */
+
+        .pet-card {
             background: white;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+
+            border-radius: 24px;
+
+            padding: 22px 20px 24px;
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.09);
+
             text-align: center;
         }
 
-        .pet-photo {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #159447;
+        /* FOTO */
+
+        .photo-container {
+            margin-top: 2px;
             margin-bottom: 15px;
         }
 
-        .pet-name {
-            font-size: 30px;
-            font-weight: bold;
-            margin: 5px 0;
+        .pet-photo {
+            width: 190px;
+            height: 190px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 6px solid #159447;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.12);
         }
+
+        /* NOMBRE */
+
+        .pet-name {
+            font-size: 34px;
+            font-weight: 800;
+
+            margin-top: 8px;
+            margin-bottom: 10px;
+
+            color: #202b33;
+        }
+
+        /* ESTADO */
 
         .status {
-            display: inline-block;
-            background: #e8f7ed;
-            color: #159447;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 10px 0 20px;
-        }
+            display: inline-flex;
 
-        .info {
-            text-align: left;
-            margin-top: 15px;
-        }
+            align-items: center;
+            gap: 8px;
 
-        .info p {
-            margin: 10px 0;
+            background: #e6f7ec;
+
+            color: #10833e;
+
+            padding: 9px 17px;
+
+            border-radius: 30px;
+
             font-size: 16px;
+
+            font-weight: 700;
+
+            margin-bottom: 22px;
         }
+
+        .status-dot {
+            width: 11px;
+            height: 11px;
+
+            background: #21c86b;
+
+            border-radius: 50%;
+        }
+
+        /* INFORMACIÓN */
+
+        .info-box {
+            background: #f7faf8;
+
+            border-radius: 17px;
+
+            padding: 15px 16px;
+
+            text-align: left;
+
+            margin-top: 5px;
+        }
+
+        .info-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 10px 2px;
+
+            font-size: 16px;
+
+            border-bottom: 1px solid #e5ebe7;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 28px;
+
+            text-align: center;
+
+            font-size: 20px;
+        }
+
+        .info-label {
+            font-weight: 700;
+
+            margin-right: 4px;
+        }
+
+        /* MENSAJE */
+
+        .message {
+            margin-top: 22px;
+
+            padding: 17px;
+
+            background: #eef8ff;
+
+            border-radius: 16px;
+
+            color: #31586f;
+
+            font-size: 15px;
+
+            line-height: 1.45;
+        }
+
+        .message-title {
+            font-weight: 800;
+
+            color: #23749c;
+
+            font-size: 17px;
+
+            margin-bottom: 5px;
+        }
+
+        /* BOTÓN */
 
         .contact-button {
             display: block;
-            margin-top: 25px;
-            padding: 15px;
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 17px 15px;
+
             background: #159447;
+
             color: white;
+
             text-decoration: none;
-            border-radius: 12px;
+
+            border-radius: 14px;
+
             font-size: 18px;
-            font-weight: bold;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 5px 12px rgba(21, 148, 71, 0.25);
+
+            transition: transform 0.15s;
         }
+
+        .contact-button:active {
+            transform: scale(0.98);
+        }
+
+        /* ID */
+
+        .pet-id {
+            margin-top: 20px;
+
+            color: #7a858a;
+
+            font-size: 13px;
+        }
+
+        .pet-id strong {
+            color: #4e5b61;
+        }
+
+        /* FOOTER */
 
         .footer {
             text-align: center;
-            margin-top: 25px;
-            color: #777;
+
+            padding: 5px 10px 25px;
+
+            color: #7a858a;
+
             font-size: 13px;
+
+            line-height: 1.5;
         }
+
+        .footer-brand {
+            color: #159447;
+
+            font-weight: 800;
+        }
+
+        /* CELULARES PEQUEÑOS */
+
+        @media (max-width: 380px) {
+
+            .brand {
+                font-size: 26px;
+            }
+
+            .pet-photo {
+                width: 165px;
+                height: 165px;
+            }
+
+            .pet-name {
+                font-size: 30px;
+            }
+
+            .pet-card {
+                padding: 18px 15px 22px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="header">
-        <div class="logo">🐾 EncuentraPet</div>
-        <div class="subtitle">
-            Identifica y protege a tu mascota
+
+    <!-- ENCABEZADO -->
+
+    <header class="header">
+
+        <div class="brand">
+            🐾 EncuentraPet
         </div>
-    </div>
 
-    <div class="container">
+        <div class="tagline">
+            Scanea · Protege · Reencuentra
+        </div>
 
-        <div class="card">
+    </header>
 
-            <!-- Fotografía temporal -->
-            <img
-                class="pet-photo"
-                src="https://placehold.co/400x400?text=Mascota"
-                alt="Fotografía de la mascota">
+
+    <!-- CONTENIDO -->
+
+    <main class="container">
+
+        <section class="pet-card">
+
+
+            <!-- FOTO DE COPITO -->
+
+            <div class="photo-container">
+
+                <img
+                    class="pet-photo"
+                    src="https://placehold.co/500x500?text=Copito"
+                    alt="Fotografía de Copito">
+
+            </div>
+
+
+            <!-- NOMBRE -->
 
             <div class="pet-name">
-                Nombre Mascota
+                COPITO
             </div>
+
+
+            <!-- ESTADO -->
 
             <div class="status">
-                🟢 Mascota Segura
-            </div>
 
-            <div class="info">
+                <span class="status-dot"></span>
 
-                <p>🐶 <strong>Nombre:</strong> Nombre Mascota</p>
-
-                <p>📍 <strong>Comuna:</strong> Santiago</p>
-
-                <p>❤️ <strong>Estado:</strong> Registrada en EncuentraPet</p>
-
-                <p>🔖 <strong>ID:</strong> EP-000001</p>
+                MASCOTA SEGURA
 
             </div>
+
+
+            <!-- INFORMACIÓN -->
+
+            <div class="info-box">
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        🐶
+                    </div>
+
+                    <div>
+                        <span class="info-label">
+                            Especie:
+                        </span>
+
+                        Perro
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        📍
+                    </div>
+
+                    <div>
+                        <span class="info-label">
+                            Comuna:
+                        </span>
+
+                        Quilicura
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        ❤️
+                    </div>
+
+                    <div>
+                        <span class="info-label">
+                            Estado:
+                        </span>
+
+                        Registrado en EncuentraPet
+                    </div>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <div class="info-icon">
+                        🆔
+                    </div>
+
+                    <div>
+                        <span class="info-label">
+                            Identificador:
+                        </span>
+
+                        EP-000001
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- MENSAJE -->
+
+            <div class="message">
+
+                <div class="message-title">
+                    ¿Encontraste a Copito?
+                </div>
+
+                Si esta mascota está perdida o necesita ayuda,
+                puedes contactar directamente a su propietario.
+
+            </div>
+
+
+            <!-- CONTACTAR -->
 
             <a
                 class="contact-button"
                 href="tel:+56900000000">
+
                 📞 Contactar al propietario
+
             </a>
 
+
+            <!-- ID -->
+
+            <div class="pet-id">
+
+                Mascota registrada en
+
+                <strong>
+                    EncuentraPet
+                </strong>
+
+                <br>
+
+                ID: <strong>EP-000001</strong>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE -->
+
+    <footer class="footer">
+
+        <div class="footer-brand">
+            EncuentraPet
         </div>
 
-        <div class="footer">
-            EncuentraPet © 2026<br>
-            Scanea · Protege · Reencuentra
-        </div>
+        Identifica y protege a tu mascota
 
-    </div>
+        <br>
+
+        © 2026 EncuentraPet
+
+    </footer>
+
 
 </body>
+
 </html>
