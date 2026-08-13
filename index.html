@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -189,6 +189,20 @@
                         <span id="pet-id">EP-000001</span>
                     </div>
                 </div>
+                <div class="info-row" id="row-microchip" hidden>
+                    <div class="info-icon">💉</div>
+                    <div>
+                        <span class="info-label">Microchip:</span>
+                        <span id="pet-microchip">—</span>
+                    </div>
+                </div>
+                <div class="info-row" id="row-esterilizada" hidden>
+                    <div class="info-icon">✅</div>
+                    <div>
+                        <span class="info-label">Esterilizada(o):</span>
+                        <span id="pet-esterilizada">—</span>
+                    </div>
+                </div>
             </div>
 
             <div class="message">
@@ -225,6 +239,9 @@
             var especie = (params.get("especie") || params.get("species") || "").trim();
             var comuna = (params.get("comuna") || params.get("city") || "").trim();
             var telefono = (params.get("telefono") || params.get("phone") || "").trim();
+            var microchip = (params.get("microchip") || "").trim().toLowerCase();
+            var esterilizada = (params.get("esterilizada") || "").trim().toLowerCase();
+            var foto = (params.get("foto") || params.get("photo") || "").trim();
 
             function setText(elementId, value) {
                 if (!value) return;
@@ -232,22 +249,56 @@
                 if (el) el.textContent = value;
             }
 
+            function setYesNo(rowId, valueId, raw) {
+                if (raw !== "si" && raw !== "no" && raw !== "1" && raw !== "0" && raw !== "true" && raw !== "false") {
+                    return;
+                }
+                var yes = raw === "si" || raw === "1" || raw === "true";
+                var row = document.getElementById(rowId);
+                if (row) row.hidden = false;
+                setText(valueId, yes ? "Sí" : "No");
+            }
+
+            function isHttpUrl(value) {
+                return /^https?:\/\//i.test(value || "");
+            }
+
+            var photoEl = document.getElementById("pet-photo");
+
             if (nombre) {
                 setText("pet-name", nombre.toUpperCase());
                 setText("message-title", "¿Encontraste a " + nombre + "?");
                 document.title = nombre + " | EncuentraPet";
-                var photo = document.getElementById("pet-photo");
-                if (photo) {
-                    photo.alt = "Fotografía de " + nombre;
-                    photo.src = "https://placehold.co/500x500?text=" + encodeURIComponent(nombre);
+                if (photoEl) {
+                    photoEl.alt = "Fotografía de " + nombre;
                 }
             }
+
+            // Foto registrada (URL pública del QR). Si no hay, placeholder con el nombre.
+            if (photoEl) {
+                if (isHttpUrl(foto)) {
+                    photoEl.src = foto;
+                    photoEl.onerror = function () {
+                        photoEl.onerror = null;
+                        photoEl.src = "https://placehold.co/500x500?text=" +
+                            encodeURIComponent(nombre || "Mascota");
+                    };
+                } else {
+                    photoEl.src = "https://placehold.co/500x500?text=" +
+                        encodeURIComponent(nombre || "Mascota");
+                }
+            }
+
             setText("pet-species", especie);
             setText("pet-comuna", comuna);
             if (id) {
                 setText("pet-id", id);
                 setText("pet-id-footer", id);
             }
+
+            // Solo Sí/No públicos; nunca el número de microchip ni datos sensibles del dueño.
+            setYesNo("row-microchip", "pet-microchip", microchip);
+            setYesNo("row-esterilizada", "pet-esterilizada", esterilizada);
 
             if (telefono) {
                 var digits = telefono.replace(/[^\d+]/g, "");
