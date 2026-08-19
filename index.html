@@ -88,6 +88,24 @@
         .info-row:last-child { border-bottom: none; }
         .info-icon { width: 28px; text-align: center; font-size: 20px; }
         .info-label { font-weight: 700; margin-right: 4px; }
+        .info-row-pair {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .info-pair-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            min-width: 0;
+        }
+        .info-pair-item .info-icon {
+            width: auto;
+            font-size: 18px;
+        }
         .message {
             margin-top: 22px;
             padding: 17px;
@@ -118,6 +136,39 @@
             transition: transform 0.15s;
         }
         .contact-button:active { transform: scale(0.98); }
+        .visitor-box {
+            margin-top: 18px;
+            text-align: left;
+            background: #f7faf8;
+            border-radius: 16px;
+            padding: 14px 14px 12px;
+        }
+        .visitor-box label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #31586f;
+            margin-bottom: 6px;
+        }
+        .visitor-box input {
+            width: 100%;
+            padding: 12px 12px;
+            border: 1px solid #d5e0da;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .visitor-hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #7a858a;
+            line-height: 1.35;
+        }
+        .notify-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #10833e;
+            min-height: 1.2em;
+        }
         .pet-id { margin-top: 20px; color: #7a858a; font-size: 13px; }
         .pet-id strong { color: #4e5b61; }
         .footer {
@@ -189,17 +240,15 @@
                         <span id="pet-id">EP-000001</span>
                     </div>
                 </div>
-                <div class="info-row" id="row-microchip" hidden>
-                    <div class="info-icon">💉</div>
-                    <div>
+                <div class="info-row info-row-pair" id="row-extra-flags" hidden>
+                    <div class="info-pair-item">
+                        <span class="info-icon">💉</span>
                         <span class="info-label">Microchip:</span>
                         <span id="pet-microchip">—</span>
                     </div>
-                </div>
-                <div class="info-row" id="row-esterilizada" hidden>
-                    <div class="info-icon">✅</div>
-                    <div>
-                        <span class="info-label">Esterilizada(o):</span>
+                    <div class="info-pair-item">
+                        <span class="info-icon">✅</span>
+                        <span class="info-label">Esterilizado(a):</span>
                         <span id="pet-esterilizada">—</span>
                     </div>
                 </div>
@@ -209,6 +258,22 @@
                 <div id="message-title" class="message-title">¿Encontraste a Copito?</div>
                 Si esta mascota está perdida o necesita ayuda,
                 puedes contactar directamente a su propietario.
+            </div>
+
+            <div class="visitor-box" id="visitor-box">
+                <label for="visitor-whatsapp">Tu WhatsApp (opcional)</label>
+                <input
+                    id="visitor-whatsapp"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    placeholder="+56 9 1234 5678"
+                    maxlength="20">
+                <div class="visitor-hint">
+                    Si lo dejas, el dueño podrá escribirte desde la app.
+                    No necesitas registrarte en EncuentraPet.
+                </div>
+                <div class="notify-status" id="notify-status" aria-live="polite"></div>
             </div>
 
             <a id="contact-button" class="contact-button" href="tel:+56900000000">
@@ -231,10 +296,15 @@
         © 2026 EncuentraPet
     </footer>
 
-    <script>
+    <script src="firebase-config.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
         (function () {
             var params = new URLSearchParams(window.location.search);
             var id = (params.get("id") || params.get("codigo") || "").trim();
+            var ownerId = (params.get("owner") || "").trim();
             var nombre = (params.get("nombre") || params.get("name") || "").trim();
             var especie = (params.get("especie") || params.get("species") || "").trim();
             var comuna = (params.get("comuna") || params.get("city") || "").trim();
@@ -242,6 +312,7 @@
             var microchip = (params.get("microchip") || "").trim().toLowerCase();
             var esterilizada = (params.get("esterilizada") || "").trim().toLowerCase();
             var foto = (params.get("foto") || params.get("photo") || "").trim();
+            var fb64 = (params.get("fb64") || "").trim();
 
             function setText(elementId, value) {
                 if (!value) return;
@@ -249,18 +320,51 @@
                 if (el) el.textContent = value;
             }
 
-            function setYesNo(rowId, valueId, raw) {
+            function parseYesNo(raw) {
                 if (raw !== "si" && raw !== "no" && raw !== "1" && raw !== "0" && raw !== "true" && raw !== "false") {
-                    return;
+                    return null;
                 }
-                var yes = raw === "si" || raw === "1" || raw === "true";
-                var row = document.getElementById(rowId);
-                if (row) row.hidden = false;
-                setText(valueId, yes ? "Sí" : "No");
+                return raw === "si" || raw === "1" || raw === "true";
+            }
+
+            function setYesNo(valueId, raw) {
+                var parsed = parseYesNo(raw);
+                if (parsed === null) return false;
+                setText(valueId, parsed ? "Sí" : "No");
+                return true;
             }
 
             function isHttpUrl(value) {
                 return /^https?:\/\//i.test(value || "");
+            }
+
+            function urlSafeToStandardBase64(value) {
+                var s = value.replace(/-/g, "+").replace(/_/g, "/");
+                while (s.length % 4 !== 0) s += "=";
+                return s;
+            }
+
+            function placeholderPhoto(name) {
+                return "https://placehold.co/500x500?text=" + encodeURIComponent(name || "Mascota");
+            }
+
+            function setNotifyStatus(text) {
+                var el = document.getElementById("notify-status");
+                if (el) el.textContent = text || "";
+            }
+
+            function uuid() {
+                if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+                return "web-" + Date.now() + "-" + Math.random().toString(16).slice(2);
+            }
+
+            function normalizePhone(raw) {
+                var digits = (raw || "").replace(/[^\d+]/g, "").trim();
+                if (!digits) return "";
+                if (digits.indexOf("+") === -1 && digits.length >= 9) {
+                    digits = "+" + digits;
+                }
+                return digits;
             }
 
             var photoEl = document.getElementById("pet-photo");
@@ -274,18 +378,17 @@
                 }
             }
 
-            // Foto registrada (URL pública del QR). Si no hay, placeholder con el nombre.
             if (photoEl) {
+                photoEl.onerror = function () {
+                    photoEl.onerror = null;
+                    photoEl.src = placeholderPhoto(nombre);
+                };
                 if (isHttpUrl(foto)) {
                     photoEl.src = foto;
-                    photoEl.onerror = function () {
-                        photoEl.onerror = null;
-                        photoEl.src = "https://placehold.co/500x500?text=" +
-                            encodeURIComponent(nombre || "Mascota");
-                    };
+                } else if (fb64.length > 20) {
+                    photoEl.src = "data:image/jpeg;base64," + urlSafeToStandardBase64(fb64);
                 } else {
-                    photoEl.src = "https://placehold.co/500x500?text=" +
-                        encodeURIComponent(nombre || "Mascota");
+                    photoEl.src = placeholderPhoto(nombre);
                 }
             }
 
@@ -296,19 +399,116 @@
                 setText("pet-id-footer", id);
             }
 
-            // Solo Sí/No públicos; nunca el número de microchip ni datos sensibles del dueño.
-            setYesNo("row-microchip", "pet-microchip", microchip);
-            setYesNo("row-esterilizada", "pet-esterilizada", esterilizada);
+            var hasMicrochipFlag = setYesNo("pet-microchip", microchip);
+            var hasSterilizedFlag = setYesNo("pet-esterilizada", esterilizada);
+            var flagsRow = document.getElementById("row-extra-flags");
+            if (flagsRow && (hasMicrochipFlag || hasSterilizedFlag)) {
+                flagsRow.hidden = false;
+            }
 
             if (telefono) {
-                var digits = telefono.replace(/[^\d+]/g, "");
-                if (digits.indexOf("+") === -1 && digits.length >= 9) {
-                    digits = "+" + digits;
-                }
+                var digits = normalizePhone(telefono);
                 var btn = document.getElementById("contact-button");
                 if (btn && digits) {
                     btn.href = "tel:" + digits;
                 }
+            }
+
+            // --- Aviso al dueño (cualquier teléfono, sin cuenta) ---
+            var cfg = window.ENCUENTRAPET_FIREBASE || null;
+            var firebaseReady = cfg
+                && cfg.apiKey
+                && cfg.apiKey !== "REEMPLAZAR"
+                && cfg.projectId
+                && cfg.projectId.indexOf("TU_PROYECTO") === -1
+                && cfg.projectId !== "encuentrapet-placeholder"
+                && cfg.appId
+                && cfg.appId.indexOf("REEMPLAZAR") === -1;
+
+            if (!ownerId || !id) {
+                setNotifyStatus("");
+                return;
+            }
+            if (!firebaseReady) {
+                setNotifyStatus("Aviso al dueño no disponible (falta configurar Firebase en la web).");
+                return;
+            }
+
+            var app = initializeApp(cfg);
+            var db = getFirestore(app);
+            var scanId = uuid();
+            var alreadySent = false;
+
+            function buildPayload(geo, phone) {
+                return {
+                    idEscaneo: scanId,
+                    ownerId: ownerId,
+                    petId: id,
+                    petName: nombre || "",
+                    petCode: id,
+                    scannedAtMillis: Date.now(),
+                    scannerPhone: phone || "Visitante (sin cuenta)",
+                    street: geo && geo.street ? geo.street : "Ubicación aproximada",
+                    neighborhood: geo && geo.neighborhood ? geo.neighborhood : "—",
+                    comuna: (geo && geo.comuna) || comuna || "Sin comuna",
+                    latitude: geo && typeof geo.latitude === "number" ? geo.latitude : null,
+                    longitude: geo && typeof geo.longitude === "number" ? geo.longitude : null,
+                    fuente: "web"
+                };
+            }
+
+            function sendBeacon(geo, asUpdate) {
+                var input = document.getElementById("visitor-whatsapp");
+                var phone = normalizePhone(input && input.value);
+                var payload = buildPayload(geo, phone);
+                if (!asUpdate && alreadySent) return Promise.resolve();
+                if (!asUpdate) alreadySent = true;
+                setNotifyStatus(asUpdate ? "Actualizando WhatsApp…" : "Avisando al propietario…");
+                var write = asUpdate
+                    ? setDoc(doc(db, "QrEscaneos", scanId), { scannerPhone: payload.scannerPhone }, { merge: true })
+                    : setDoc(doc(db, "QrEscaneos", scanId), payload);
+                return write
+                    .then(function () {
+                        setNotifyStatus("Listo: el propietario recibirá el aviso en la app.");
+                        alreadySent = true;
+                    })
+                    .catch(function () {
+                        if (!asUpdate) alreadySent = false;
+                        setNotifyStatus("No se pudo avisar ahora. Puedes contactar por teléfono.");
+                    });
+            }
+
+            function readGeoThenSend() {
+                if (!navigator.geolocation) {
+                    sendBeacon(null, false);
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    function (pos) {
+                        sendBeacon({
+                            street: "Lat " + pos.coords.latitude.toFixed(4) +
+                                ", Lng " + pos.coords.longitude.toFixed(4),
+                            neighborhood: "—",
+                            comuna: comuna || "Sin comuna",
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude
+                        }, false);
+                    },
+                    function () { sendBeacon(null, false); },
+                    { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+                );
+            }
+
+            // Pequeña espera para que el visitante pueda escribir WhatsApp antes del primer aviso.
+            setTimeout(readGeoThenSend, 2500);
+
+            var waInput = document.getElementById("visitor-whatsapp");
+            if (waInput) {
+                waInput.addEventListener("change", function () {
+                    var phone = normalizePhone(waInput.value);
+                    if (!phone || !alreadySent) return;
+                    sendBeacon(null, true);
+                });
             }
         })();
     </script>
