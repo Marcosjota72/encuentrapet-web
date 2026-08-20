@@ -485,18 +485,65 @@
                 }
                 navigator.geolocation.getCurrentPosition(
                     function (pos) {
-                        sendBeacon({
-                            street: "Lat " + pos.coords.latitude.toFixed(4) +
-                                ", Lng " + pos.coords.longitude.toFixed(4),
-                            neighborhood: "—",
-                            comuna: comuna || "Sin comuna",
-                            latitude: pos.coords.latitude,
-                            longitude: pos.coords.longitude
-                        }, false);
+                        var lat = pos.coords.latitude;
+                        var lng = pos.coords.longitude;
+                        reverseGeocode(lat, lng)
+                            .then(function (geo) {
+                                sendBeacon(geo, false);
+                            })
+                            .catch(function () {
+                                sendBeacon({
+                                    street: "Calle no disponible (aprox.)",
+                                    neighborhood: "—",
+                                    comuna: comuna || "Sin comuna",
+                                    latitude: lat,
+                                    longitude: lng
+                                }, false);
+                            });
                     },
                     function () { sendBeacon(null, false); },
                     { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
                 );
+            }
+
+            function formatStreet(road, houseNumber) {
+                var r = (road || "").trim();
+                var n = (houseNumber || "").trim();
+                if (!r) return "";
+                return n ? (r + " Nº " + n + " (aprox.)") : (r + " (núm. aprox. no disponible)");
+            }
+
+            function reverseGeocode(lat, lng) {
+                var url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2"
+                    + "&lat=" + encodeURIComponent(lat)
+                    + "&lon=" + encodeURIComponent(lng)
+                    + "&addressdetails=1";
+                return fetch(url, {
+                    headers: {
+                        "Accept-Language": "es",
+                        "Accept": "application/json"
+                    }
+                }).then(function (res) {
+                    if (!res.ok) throw new Error("geo");
+                    return res.json();
+                }).then(function (data) {
+                    var a = (data && data.address) || {};
+                    var road = a.road || a.pedestrian || a.path || a.residential || "";
+                    var street = formatStreet(road, a.house_number);
+                    if (!street && data && data.display_name) {
+                        street = String(data.display_name).split(",")[0].trim();
+                    }
+                    if (!street) street = "Calle no disponible (aprox.)";
+                    var neighborhood = a.suburb || a.neighbourhood || a.quarter || a.city_district || "—";
+                    var geoComuna = a.city || a.town || a.municipality || a.village || comuna || "Sin comuna";
+                    return {
+                        street: street,
+                        neighborhood: neighborhood,
+                        comuna: geoComuna,
+                        latitude: lat,
+                        longitude: lng
+                    };
+                });
             }
 
             // Pequeña espera para que el visitante pueda escribir WhatsApp antes del primer aviso.
